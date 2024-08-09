@@ -1,5 +1,6 @@
 package hoonspring.hellospring6;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,18 +14,20 @@ import org.springframework.context.annotation.Configuration;
  *   스프링이 필요로 하는 것은 '빈과 관련된 정보'
  */
 @Configuration
-@ComponentScan
 public class ObjectFactory {
 
-    /*
     @Bean
     public PaymentService paymentService() {
-        return new PaymentService(exRateProvider());
+        return new PaymentService(cachedExRateProvider());
+    }
+
+    @Bean
+    public CachedExRateProvider cachedExRateProvider(){
+        return new CachedExRateProvider(exRateProvider());
     }
 
     @Bean
     public ExRateProvider exRateProvider(){
         return new WebApiExRateProvider();
     }
-    */
 }
