@@ -1,7 +1,10 @@
 package hoonspring.hellospring6;
 
+import hoonspring.hellospring6.exRate.CachedExRateProvider;
+import hoonspring.hellospring6.payment.ExRateProvider;
+import hoonspring.hellospring6.exRate.WebApiExRateProvider;
+import hoonspring.hellospring6.payment.PaymentService;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /*

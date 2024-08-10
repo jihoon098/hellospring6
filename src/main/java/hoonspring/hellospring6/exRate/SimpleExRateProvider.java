@@ -1,9 +1,11 @@
-package hoonspring.hellospring6;
+package hoonspring.hellospring6.exRate;
+
+import hoonspring.hellospring6.payment.ExRateProvider;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 
-public class SimpleExRateProvider implements ExRateProvider{
+public class SimpleExRateProvider implements ExRateProvider {
 
     @Override
     public BigDecimal getExRate(String currency) throws IOException {

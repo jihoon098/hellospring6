@@ -1,4 +1,4 @@
-package hoonspring.hellospring6;
+package hoonspring.hellospring6.payment;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package hoonspring.hellospring6;
+package hoonspring.hellospring6.payment;
 
 import java.io.IOException;
 import java.math.BigDecimal;

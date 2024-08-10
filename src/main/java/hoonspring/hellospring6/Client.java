@@ -1,5 +1,7 @@
 package hoonspring.hellospring6;
 
+import hoonspring.hellospring6.payment.Payment;
+import hoonspring.hellospring6.payment.PaymentService;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

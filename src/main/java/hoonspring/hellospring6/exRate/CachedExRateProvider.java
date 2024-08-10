@@ -1,10 +1,12 @@
-package hoonspring.hellospring6;
+package hoonspring.hellospring6.exRate;
+
+import hoonspring.hellospring6.payment.ExRateProvider;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class CachedExRateProvider implements ExRateProvider{
+public class CachedExRateProvider implements ExRateProvider {
 
     private final ExRateProvider target;
 

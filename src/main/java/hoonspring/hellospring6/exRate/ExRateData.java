@@ -1,4 +1,4 @@
-package hoonspring.hellospring6;
+package hoonspring.hellospring6.exRate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
