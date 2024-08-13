@@ -1,11 +1,12 @@
 package hoonspring.hellospring6;
 
-import hoonspring.hellospring6.exRate.CachedExRateProvider;
-import hoonspring.hellospring6.payment.ExRateProvider;
 import hoonspring.hellospring6.exRate.WebApiExRateProvider;
+import hoonspring.hellospring6.payment.ExRateProvider;
 import hoonspring.hellospring6.payment.PaymentService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.time.Clock;
 
 /*
  * @Configuration
@@ -17,15 +18,20 @@ import org.springframework.context.annotation.Configuration;
  *   스프링이 필요로 하는 것은 '빈과 관련된 정보'
  */
 @Configuration
-public class ObjectFactory {
+public class PaymentConfig {
 
     @Bean
     public PaymentService paymentService() {
-        return new PaymentService(exRateProvider());
+        return new PaymentService(exRateProvider(), clock());
     }
 
     @Bean
     public ExRateProvider exRateProvider(){
         return new WebApiExRateProvider();
+    }
+
+    @Bean
+    public Clock clock() {
+        return Clock.systemDefaultZone();
     }
 }

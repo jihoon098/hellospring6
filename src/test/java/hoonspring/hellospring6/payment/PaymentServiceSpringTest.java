@@ -1,6 +1,8 @@
 package hoonspring.hellospring6.payment;
 
-import hoonspring.hellospring6.TestObjectFactory;
+import hoonspring.hellospring6.TestPaymentConfig;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.LocalDateTime;
 
 import static java.math.BigDecimal.valueOf;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,11 +26,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  *   classes 속성으로 지정한 구성 정보 클래스(Configuration 클래스)를 기반으로 스프링 컨테이너를 초기화.
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestObjectFactory.class)
+@ContextConfiguration(classes = TestPaymentConfig.class)
 public class PaymentServiceSpringTest {
 
     @Autowired public PaymentService paymentService;
     @Autowired public ExRateProviderStub exRateProviderStub;
+    @Autowired public Clock clock;
 
     @Test
     void convertedAmount() throws IOException {
@@ -42,5 +47,17 @@ public class PaymentServiceSpringTest {
 
         assertThat(payment2.getExchangeRate()).isEqualByComparingTo(valueOf(500));
         assertThat(payment2.getConvertedAmount()).isEqualByComparingTo(valueOf(5_000));
+    }
+
+    @Test
+    @DisplayName("원화환산금액의 유효시간 계산 검증")
+    void validUntil() throws IOException {
+        Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
+
+        // validUntil이 prepare() 30분 뒤로 설정됐는가?
+        LocalDateTime now = LocalDateTime.now(this.clock);
+        LocalDateTime expectedValidUntil = now.plusMinutes(30);
+
+        Assertions.assertThat(expectedValidUntil).isEqualTo(payment.getValidUntil());
     }
 }
