@@ -1,6 +1,7 @@
 package hoonspring.hellospring6.payment;
 
 import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 public class Payment {
@@ -19,6 +20,19 @@ public class Payment {
         this.exchangeRate = exchangeRate;
         this.convertedAmount = convertedAmount;
         this.validUntil = validUntil;
+    }
+
+    static Payment createPrepared(Long orderId, String currency, BigDecimal foreignCurrencyAmount, BigDecimal exchangeRate,
+                                  LocalDateTime now) {
+        BigDecimal convertedAmount = foreignCurrencyAmount.multiply(exchangeRate);
+        LocalDateTime validUntil = now.plusMinutes(30);
+
+        return new Payment(orderId, currency, foreignCurrencyAmount, exchangeRate, convertedAmount, validUntil);
+    }
+
+    // 유효시간을 검증하는 코드를 vo안에 둬서 사용하는 쪽에서 유효시간 체크 로직을 별도로 작성할 필요없게 됨.
+    public boolean isValid(Clock clock) {
+        return LocalDateTime.now(clock).isBefore(this.getValidUntil());
     }
 
     public Long getOrderId() {
