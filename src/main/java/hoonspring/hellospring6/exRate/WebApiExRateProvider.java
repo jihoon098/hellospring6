@@ -21,6 +21,11 @@ public class WebApiExRateProvider implements ExRateProvider {
     public BigDecimal getExRate(String currency) {
         String url = "https://open.er-api.com/v6/latest/" + currency;
 
+        return runApiforExRate(url);
+    }
+
+    // 메소드 추출(Api를 호출하여 환율정보를 가져오는 기본적인 틀 분리)
+    private static BigDecimal runApiforExRate(String url) {
         URI uri;
         try {
             uri = new URI(url);
@@ -30,21 +35,30 @@ public class WebApiExRateProvider implements ExRateProvider {
 
         String response;
         try {
-            HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                response = br.lines().collect(Collectors.joining());
-            }
+            response = executeApi(uri);
         } catch(IOException e) {
             throw new RuntimeException();
         }
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            ExRateData data = mapper.readValue(response, ExRateData.class);
-            return data.rates().get("KRW");
+            return extractExRate(response);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    private static String executeApi(URI uri) throws IOException {
+        String response;
+        HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+            response = br.lines().collect(Collectors.joining());
+        }
+        return response;
+    }
+
+    private static BigDecimal extractExRate(String response) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ExRateData data = mapper.readValue(response, ExRateData.class);
+        return data.rates().get("KRW");
     }
 }
