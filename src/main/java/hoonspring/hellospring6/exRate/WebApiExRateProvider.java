@@ -2,6 +2,7 @@ package hoonspring.hellospring6.exRate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hoonspring.hellospring6.api.ApiExecutor;
 import hoonspring.hellospring6.api.SimpleApiExecutor;
 import hoonspring.hellospring6.payment.ExRateProvider;
 import org.springframework.stereotype.Component;
@@ -18,11 +19,11 @@ public class WebApiExRateProvider implements ExRateProvider {
     public BigDecimal getExRate(String currency) {
         String url = "https://open.er-api.com/v6/latest/" + currency;
 
-        return runApiforExRate(url);
+        return runApiforExRate(url, new SimpleApiExecutor());
     }
 
     // 메소드 추출(Api를 호출하여 환율정보를 가져오는 기본적인 틀 분리)
-    private static BigDecimal runApiforExRate(String url) {
+    private static BigDecimal runApiforExRate(String url, ApiExecutor apiExecutor) {
         URI uri;
         try {
             uri = new URI(url);
@@ -32,7 +33,7 @@ public class WebApiExRateProvider implements ExRateProvider {
 
         String response;
         try {
-            response = new SimpleApiExecutor().execute(uri);
+            response = apiExecutor.execute(uri);
         } catch(IOException e) {
             throw new RuntimeException();
         }
