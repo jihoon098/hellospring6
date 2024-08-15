@@ -34,7 +34,7 @@ public class PaymentServiceSpringTest {
     @Autowired public Clock clock;
 
     @Test
-    void convertedAmount() throws IOException {
+    void convertedAmount() {
         // exRate: 1000
         Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
 
@@ -51,7 +51,7 @@ public class PaymentServiceSpringTest {
 
     @Test
     @DisplayName("원화환산금액의 유효시간 계산 검증")
-    void validUntil() throws IOException {
+    void validUntil() {
         Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
 
         // validUntil이 prepare() 30분 뒤로 설정됐는가?

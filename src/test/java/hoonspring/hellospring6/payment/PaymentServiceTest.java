@@ -26,7 +26,7 @@ public class PaymentServiceTest {
 
     @Test
     @DisplayName("환율 계산 검증")
-     void convertedAmount() throws IOException {
+     void convertedAmount() {
         testAmount(valueOf(500), valueOf(5_000), this.clock); // 숫자에 '_' 포함 가능. (자릿수 구분을 위해 사용 등 용이)
         testAmount(valueOf(1000), valueOf(10_000), this.clock); // 숫자에 '_' 포함 가능. (자릿수 구분을 위해 사용 등 용이)
         testAmount(valueOf(2000), valueOf(20_000), this.clock); // 숫자에 '_' 포함 가능. (자릿수 구분을 위해 사용 등 용이)
@@ -34,7 +34,7 @@ public class PaymentServiceTest {
 
     @Test
     @DisplayName("원화환산금액의 유효시간 계산 검증")
-    void validUntil() throws IOException {
+    void validUntil() {
         PaymentService paymentService = new PaymentService(new ExRateProviderStub(valueOf(1_000)), this.clock);
 
         Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
@@ -46,7 +46,7 @@ public class PaymentServiceTest {
         Assertions.assertThat(expectedValidUntil).isEqualTo(payment.getValidUntil());
     }
 
-    private static void testAmount(BigDecimal exRate, BigDecimal convertedAmount, Clock clock) throws IOException {
+    private static void testAmount(BigDecimal exRate, BigDecimal convertedAmount, Clock clock) {
         // 제어할 수 있는 테스트 대역을 이용
         PaymentService paymentService = new PaymentService(new ExRateProviderStub(exRate), clock);
 

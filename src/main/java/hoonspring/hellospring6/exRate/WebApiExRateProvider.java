@@ -1,5 +1,6 @@
 package hoonspring.hellospring6.exRate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hoonspring.hellospring6.payment.ExRateProvider;
 import org.springframework.stereotype.Component;
@@ -9,30 +10,41 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.stream.Collectors;
 
 @Component
 public class WebApiExRateProvider implements ExRateProvider {
 
     @Override
-    public BigDecimal getExRate(String currency) throws IOException {
+    public BigDecimal getExRate(String currency) {
+        String url = "https://open.er-api.com/v6/latest/" + currency;
 
-        URL url = new URL("https://open.er-api.com/v6/latest/" + currency);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        /*
-         * 1. InputStream : 파일 or 네트워크에서 넘어오는 데이터를 Byte 형태로 리턴.
-         * 2. InputStreamReader : Byte 데이터를 사람이 읽을 수 있는 문자(Character)로 변환하여 리턴.
-         * 3. BufferedReader : Character는 단순한 문자의 나열이기 때문에, 읽기 편하게 텍스트로 변환하여 리턴.
-         */
-        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String response = br.lines().collect(Collectors.joining());
-        br.close();
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
 
-        ObjectMapper mapper = new ObjectMapper();
-        ExRateData data = mapper.readValue(response, ExRateData.class);
+        String response;
+        try {
+            HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                response = br.lines().collect(Collectors.joining());
+            }
+        } catch(IOException e) {
+            throw new RuntimeException();
+        }
 
-        System.out.println("API ExRate: " + data.rates().get("KRW"));
-        return data.rates().get("KRW");
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ExRateData data = mapper.readValue(response, ExRateData.class);
+            return data.rates().get("KRW");
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
