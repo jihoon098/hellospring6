@@ -3,6 +3,8 @@ package hoonspring.hellospring6.exRate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hoonspring.hellospring6.api.ApiExecutor;
+import hoonspring.hellospring6.api.ErApiExRateExtractor;
+import hoonspring.hellospring6.api.ExRateExtractor;
 import hoonspring.hellospring6.api.SimpleApiExecutor;
 import hoonspring.hellospring6.payment.ExRateProvider;
 import org.springframework.stereotype.Component;
@@ -19,11 +21,11 @@ public class WebApiExRateProvider implements ExRateProvider {
     public BigDecimal getExRate(String currency) {
         String url = "https://open.er-api.com/v6/latest/" + currency;
 
-        return runApiforExRate(url, new SimpleApiExecutor());
+        return runApiforExRate(url, new SimpleApiExecutor(), new ErApiExRateExtractor());
     }
 
     // 메소드 추출(Api를 호출하여 환율정보를 가져오는 기본적인 틀 분리)
-    private static BigDecimal runApiforExRate(String url, ApiExecutor apiExecutor) {
+    private static BigDecimal runApiforExRate(String url, ApiExecutor apiExecutor, ExRateExtractor exRateExtractor) {
         URI uri;
         try {
             uri = new URI(url);
@@ -39,15 +41,10 @@ public class WebApiExRateProvider implements ExRateProvider {
         }
 
         try {
-            return extractExRate(response);
+            return exRateExtractor.extract(response);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static BigDecimal extractExRate(String response) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        ExRateData data = mapper.readValue(response, ExRateData.class);
-        return data.rates().get("KRW");
-    }
 }
