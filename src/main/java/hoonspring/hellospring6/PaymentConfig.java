@@ -1,13 +1,11 @@
 package hoonspring.hellospring6;
 
-import hoonspring.hellospring6.api.ApiTemplate;
-import hoonspring.hellospring6.api.ErApiExRateExtractor;
-import hoonspring.hellospring6.api.HttpClientApiExecutor;
-import hoonspring.hellospring6.exRate.WebApiExRateProvider;
+import hoonspring.hellospring6.exRate.RestTemplateExRateProvider;
 import hoonspring.hellospring6.payment.ExRateProvider;
 import hoonspring.hellospring6.payment.PaymentService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.Clock;
 
@@ -29,13 +27,13 @@ public class PaymentConfig {
     }
 
     @Bean
-    public ApiTemplate apiTemplate() {
-        return new ApiTemplate(new HttpClientApiExecutor(), new ErApiExRateExtractor());
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     @Bean
     public ExRateProvider exRateProvider(){
-        return new WebApiExRateProvider(apiTemplate());
+        return new RestTemplateExRateProvider(restTemplate());
     }
 
     @Bean
