@@ -1,5 +1,8 @@
 package hoonspring.hellospring6;
 
+import hoonspring.hellospring6.api.ApiTemplate;
+import hoonspring.hellospring6.api.ErApiExRateExtractor;
+import hoonspring.hellospring6.api.HttpClientApiExecutor;
 import hoonspring.hellospring6.exRate.WebApiExRateProvider;
 import hoonspring.hellospring6.payment.ExRateProvider;
 import hoonspring.hellospring6.payment.PaymentService;
@@ -26,8 +29,13 @@ public class PaymentConfig {
     }
 
     @Bean
+    public ApiTemplate apiTemplate() {
+        return new ApiTemplate(new HttpClientApiExecutor(), new ErApiExRateExtractor());
+    }
+
+    @Bean
     public ExRateProvider exRateProvider(){
-        return new WebApiExRateProvider();
+        return new WebApiExRateProvider(apiTemplate());
     }
 
     @Bean
