@@ -1,5 +1,6 @@
 package hoonspring.hellospring6;
 
+import hoonspring.hellospring6.data.OrderRepository;
 import hoonspring.hellospring6.order.Order;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -11,20 +12,16 @@ import java.math.BigDecimal;
 public class DataClient {
     public static void main(String[] args) {
         BeanFactory beanFactory = new AnnotationConfigApplicationContext(DataConfig.class);
-        EntityManagerFactory emf = beanFactory.getBean(EntityManagerFactory.class);
-        
-        // 1. EntityManagerFactory를 이용해 EntityManager 생성
-        EntityManager em = emf.createEntityManager();
-
-        // 2. Transaction 생성. 모든 DB작업은 Transaction안에서 일어나야함.
-        em.getTransaction().begin();
+        OrderRepository repository = beanFactory.getBean(OrderRepository.class);
 
         Order order = new Order("100", BigDecimal.TEN);
-        em.persist(order);
+        repository.save(order);
 
-        System.out.println(order);
-
-        em.getTransaction().commit();
-        em.close();
+        /*
+         * org.hibernate.exception의 ConstraintViolationException 발생.
+         * 만약 예외를 복구하려면, ConstraintViolationException을 catch 해야함.
+         */
+        Order order2 = new Order("100", BigDecimal.ONE);
+        repository.save(order2);
     }
 }
