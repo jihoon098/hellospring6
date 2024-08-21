@@ -1,6 +1,5 @@
 package hoonspring.hellospring6;
 
-import hoonspring.hellospring6.data.OrderRepository;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
@@ -58,8 +57,4 @@ public class DataConfig {
         return new JpaTransactionManager(emf);
     }
 
-    @Bean
-    public OrderRepository orderRepository(){
-        return new OrderRepository();
-    }
 }
