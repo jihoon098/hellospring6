@@ -1,5 +1,6 @@
 package hoonspring.hellospring6;
 
+import hoonspring.hellospring6.data.JpaOrderRepository;
 import hoonspring.hellospring6.data.OrderRepository;
 import hoonspring.hellospring6.data.OrderService;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +14,7 @@ public class OrderConfig {
 
     @Bean
     public OrderRepository orderRepository(){
-        return new OrderRepository();
+        return new JpaOrderRepository();
     }
 
     @Bean
