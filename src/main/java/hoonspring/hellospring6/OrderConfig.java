@@ -1,8 +1,6 @@
 package hoonspring.hellospring6;
 
-import hoonspring.hellospring6.data.JdbcOrderRepository;
-import hoonspring.hellospring6.data.OrderRepository;
-import hoonspring.hellospring6.data.OrderService;
+import hoonspring.hellospring6.data.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -20,9 +18,7 @@ public class OrderConfig {
     }
 
     @Bean
-    public OrderService orderService(
-            OrderRepository orderRepository, PlatformTransactionManager transactionManager
-    ) {
-        return new OrderService(orderRepository, transactionManager);
+    public OrderService orderService(OrderRepository orderRepository, PlatformTransactionManager transactionManager) {
+        return new OrderServiceTxProxy(new OrderServiceImpl(orderRepository), transactionManager);
     }
 }

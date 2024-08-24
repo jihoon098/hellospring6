@@ -2,7 +2,6 @@ package hoonspring.hellospring6.order;
 
 import hoonspring.hellospring6.OrderConfig;
 import hoonspring.hellospring6.data.OrderService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
